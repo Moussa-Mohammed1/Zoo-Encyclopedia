@@ -47,4 +47,20 @@ animalForm.addEventListener('click', (e)=>{
         animalForm.classList.add('hidden');
     }
 });
+document.querySelectorAll('.btn-edit-animal').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const type = btn.dataset.type;
+        const img = btn.dataset.img;
+        const habitat = btn.dataset.habitat;
 
+        document.getElementById('edit_animal_id').value = id;
+        document.getElementById('edit_animal_name').value = name;
+        document.getElementById('edit_animal_type').value = type;
+        document.getElementById('edit_animal_img').value = img;
+        document.getElementById('edit_habitat_ID').value = habitat;
+
+        document.getElementById('edit-animal-modal').classList.remove('hidden');
+    });
+});
