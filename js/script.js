@@ -49,11 +49,11 @@ animalForm.addEventListener('click', (e)=>{
 });
 document.querySelectorAll('.btn-edit-animal').forEach(btn => {
     btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        const name = btn.dataset.name;
-        const type = btn.dataset.type;
-        const img = btn.dataset.img;
-        const habitat = btn.dataset.habitat;
+        let id = btn.dataset.id;
+        let name = btn.dataset.name;
+        let type = btn.dataset.type;
+        let img = btn.dataset.img;
+        let habitat = btn.dataset.habitat;
 
         document.getElementById('edit_animal_id').value = id;
         document.getElementById('edit_animal_name').value = name;
@@ -64,3 +64,16 @@ document.querySelectorAll('.btn-edit-animal').forEach(btn => {
         document.getElementById('edit-animal-modal').classList.remove('hidden');
     });
 });
+document.querySelectorAll('.edit-habitat-btn').forEach(btn =>{
+    btn.addEventListener('click', ()=>{
+        let id = btn.dataset.id;
+        let name = btn.dataset.habitat;
+        let description = btn.dataset.description;
+
+        document.getElementById('edit-habitat-id').value = id;
+        document.getElementById('nom-habitat').value = name;
+        document.getElementById('description-hab').value = description;
+
+        document.getElementById('edit-habitat-form').classList.remove('hidden');
+    })
+})
