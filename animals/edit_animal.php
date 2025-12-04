@@ -14,12 +14,12 @@
                     habitat_ID = '$habitat'
                 WHERE id = '$id' ";
         if (mysqli_query($conn, $sql)) {
-            header("Location: ./../index.php");
+            header("Location: ./../index.php#animaux");
             exit();
         }
     }
     else{
-        header("Location: ./../index.php");
+        header("Location: ./../index.php#animaux");
         exit();
     }
 ?>

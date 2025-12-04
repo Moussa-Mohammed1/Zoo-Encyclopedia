@@ -10,9 +10,10 @@
         $sql = "INSERT INTO animal (animal_name, animal_type, animal_img, habitat_ID) 
                 VALUES ('$name', '$type', '$img', '$habitat')";
         if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('animal saved!')</script>";
+            header("Location: ./../index.php#animaux");
+            exit();
         }
     }
-    header("Location: ./../index.php");
+    header("Location: ./../index.php#animaux");
     exit();
 ?>
