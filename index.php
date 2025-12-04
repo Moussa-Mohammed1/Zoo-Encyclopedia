@@ -21,10 +21,26 @@
             $animals[] = $row;
         };
     };
-    // if (mysqli_query($conn, $habitat_sql)) {
-    //     echo "<script>alert('Connectet')</script>";
-    // }
-    // else { echo "<script>alert('Unconnected!')</script>";}
+    $habitat_counts =[];
+    $type_counts = [
+        'Carnivore' => 0,
+        'Herbivore' => 0,
+        'Omnivore' => 0
+    ];
+    $total_animals = count($animals);
+    $total_habitats = count($habitats);
+    // echo $total_habitats;
+    foreach($animals as $animal){
+        $habitat_name = $animal['habitat_name'] ?? 'Unknown';
+        if (!isset($habitat_counts[$habitat_name])) {
+            $habitat_counts[$habitat_name] = 0;
+        }
+        $habitat_counts[$habitat_name] ++;
+        $type = $animal['animal_type'];
+        if (isset($type_counts[$type])) {
+            $type_counts[$type]++;
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
@@ -33,6 +49,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zoo Encyclopedie</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
         tailwind.config = {
@@ -80,7 +97,7 @@
             <h2 class="text-4xl font-bold text-gray-900 mb-8 border-b-4 border-zoo-secondary pb-2"><i class="fa-solid fa-book"></i> Découvrez nos Animaux !</h2>
 
             <div class="filtres-container bg-white p-6 rounded-lg shadow-md mb-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <input type="text" placeholder="Rechercher..." class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 outline-none focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
+                <input id="search-input" type="text" placeholder="Rechercher..." class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 outline-none focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
                 <select id="filtre-habitat" class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
                     <option value="">Tous les Habitats</option>
                     <option value="Savane">Savane</option>
@@ -125,43 +142,118 @@
             </div>
         </section>
 
-        <section id="statistiques" class="py-8">
-            <h2 class="text-4xl font-bold text-gray-900 mb-8 border-b-4 border-zoo-secondary pb-2">
-                <i class="fas fa-chart-bar mr-2"></i> Statistiques du Zoo
-            </h2>
+        <section id="statistiques" class="py-12 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-700">Distribution par Habitat</h3>
+                <h2 class="text-4xl font-bold text-gray-900 mb-8 border-b-4 border-zoo-secondary pb-2">
+                        <i class="fas fa-chart-bar mr-2"></i> Statistiques du Zoo
+                    </h2>
 
-                    <div class="space-y-2">
-                        <p class="text-lg text-gray-800">Savane : <span id="habitat-savane" class="font-bold">12</span></p>
-                        <p class="text-lg text-gray-800">Forêt : <span id="habitat-foret" class="font-bold">8</span></p>
-                        <p class="text-lg text-gray-800">Marais : <span id="habitat-marais" class="font-bold">6</span></p>
-                        <p class="text-lg text-gray-800">Désert : <span id="habitat-desert" class="font-bold">9</span></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-b-4 border-yellow-500 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 mb-4">
+                            <i class="fas fa-globe text-yellow-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Résidents Totaux</p>
+                        <p class="text-4xl font-bold text-gray-900 mt-1" id="total-animaux"><?=$total_animals?></p>
+                        <p class="text-sm text-gray-400 mt-2">Animaux surveillés</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-b-4 border-green-500 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                            <i class="fas fa-tree text-green-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Écosystèmes Majurs</p>
+                        <p class="text-4xl font-bold text-gray-900 mt-1" id="total-habitats"><?=$total_habitats?></p>
+                        <p class="text-sm text-gray-400 mt-2">Habitats diversifiés</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-b-4 border-red-500 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                            <i class="fas fa-bone text-red-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Carnivores</p>
+                        <p class="text-4xl font-bold text-gray-900 mt-1" id="type-carnivore"><?=$type_counts['Carnivore']?></p>
+                        <p class="text-sm text-gray-400 mt-2">Prédateurs de pointe</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-b-4 border-blue-500 transform hover:scale-105 transition duration-300 ease-in-out">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+                            <i class="fas fa-leaf text-blue-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Herbivores</p>
+                        <p class="text-4xl font-bold text-gray-900 mt-1" id="type-herbivore"><?=$type_counts['Herbivore']?></p>
+                        <p class="text-sm text-gray-400 mt-2">Consommateurs primaires</p>
+                    </div>
+                    
+                </div>
+
+                <div class="mt-12">
+                    <h3 class="text-3xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-6 flex items-center">
+                        <i class="fas fa-map-marker-alt text-zoo-secondary mr-2"></i> Répartition Géographique
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        
+                        <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 hover:bg-yellow-100 transition duration-150">
+                            <p class="text-xl font-bold text-yellow-800 flex justify-between items-center">
+                                Savane 
+                                <span class="text-3xl font-extrabold text-yellow-900" id="habitat-savane"><?=$habitat_counts['Savane']?></span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">Vastes plaines et grands mammifères</p>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-xl border border-green-200 hover:bg-green-100 transition duration-150">
+                            <p class="text-xl font-bold text-green-800 flex justify-between items-center">
+                                Forêt 
+                                <span class="text-3xl font-extrabold text-green-900" id="habitat-foret"><?=$habitat_counts['Jungle'] ?? 0 ?></span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">Canopée dense et vie cachée</p>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 hover:bg-blue-100 transition duration-150">
+                            <p class="text-xl font-bold text-blue-800 flex justify-between items-center">
+                                Desert
+                                <span class="text-3xl font-extrabold text-blue-900" id="habitat-marais"><?=$habitat_counts['Desert']?></span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">Zones humides et amphibiens</p>
+                        </div>
+
+                        <div class="bg-red-50 p-6 rounded-xl border border-red-200 hover:bg-red-100 transition duration-150">
+                            <p class="text-xl font-bold text-red-800 flex justify-between items-center">
+                                Ocean 
+                                <span class="text-3xl font-extrabold text-red-900" id="habitat-desert"><?= $habitat_counts['Ocean'] ?? 0 ?></span>
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">Environnements arides et résilients</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-700">Distribution par Type Alimentaire</h3>
+                <div class="mt-12">
+                    <h3 class="text-3xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-6 flex items-center">
+                        <i class="fas fa-utensils text-zoo-secondary mr-2"></i> Régimes Alimentaires
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <div class="bg-red-50 p-6 rounded-xl border border-red-200 flex justify-between items-center hover:shadow-md transition duration-150">
+                            <p class="text-xl font-semibold text-red-800">Carnivores</p>
+                            <span class="text-4xl font-extrabold text-red-900" id="type-carnivore"><?= $type_counts['Carnivore'] ?? 0?></span>
+                        </div>
 
-                    <div class="space-y-2">
-                        <p class="text-lg text-gray-800">Carnivores : <span id="type-carnivore" class="font-bold">14</span></p>
-                        <p class="text-lg text-gray-800">Herbivores : <span id="type-herbivore" class="font-bold">11</span></p>
-                        <p class="text-lg text-gray-800">Omnivores : <span id="type-omnivore" class="font-bold">10</span></p>
+                        <div class="bg-green-50 p-6 rounded-xl border border-green-200 flex justify-between items-center hover:shadow-md transition duration-150">
+                            <p class="text-xl font-semibold text-green-800">Herbivores</p>
+                            <span class="text-4xl font-extrabold text-green-900" id="type-herbivore"><?= $type_counts['Herbivore'] ?? 0?></span>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 flex justify-between items-center hover:shadow-md transition duration-150">
+                            <p class="text-xl font-semibold text-blue-800">Omnivores</p>
+                            <span class="text-4xl font-extrabold text-blue-900" id="type-omnivore"><?= $type_counts['Omnivore'] ?? 0?></span>
+                        </div>
                     </div>
                 </div>
 
-            </div>
-
-            <div class="mt-6 bg-zoo-primary/10 p-4 rounded-lg border-l-4 border-zoo-primary shadow-inner">
-                <p class="text-lg font-semibold text-gray-800">
-                    Résumé : Nombre total d'animaux : 
-                    <strong><span id="total-animaux">35</span></strong> | 
-                    Habitats : 
-                    <strong><span id="total-habitats">4</span></strong>
-                </p>
             </div>
         </section>
 
