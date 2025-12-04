@@ -248,7 +248,6 @@
                 class="inset-0 z-50  bg-black/50 fixed flex justify-center items-center hidden">
                 <form action="./animals/add_animal.php" method="POST" enctype="multipart/form-data" class="w-2/4 space-y-4 bg-white p-6 rounded-lg shadow">
         
-                    <!-- Animal Name -->
                     <div>
                         <label for="animal_name" class="block font-semibold mb-1">Nom de l'animal</label>
                         <input type="text" id="animal_name" name="animal_name"
@@ -256,7 +255,6 @@
                             required>
                     </div>
 
-                    <!-- Animal Type -->
                     <div>
                         <label for="animal_type" class="block font-semibold mb-1">Type d'animal</label>
                         <select id="animal_type" name="animal_type"
@@ -281,11 +279,9 @@
                             class="w-full border border-gray-300 text-black rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required>
                             <option>--select an habitat--</option>
-                            <?php if(mysqli_num_rows($habitat_result) > 0) :?>
-                            <?php while ($habitat = mysqli_fetch_assoc($habitat_result)) :?>
-                                <?php echo '<option value="'. $habitat['habitat_ID'] .'">' . $habitat['habitat_name'] . '</option>';?>
-                                <?php endwhile;?>
-                            <?php endif;?>
+                                <?php foreach($habitats as $habitat) :?>
+                                    <?php echo '<option value="'. $habitat['habitat_ID'] .'">' . $habitat['habitat_name'] . '</option>';?>
+                                <?php endforeach;?>
                         </select>
                     </div>
 
