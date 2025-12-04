@@ -5,16 +5,16 @@
         $sql = "DELETE FROM habitat
                 WHERE habitat_ID = '$id'";
         if (mysqli_query($conn, $sql)) {
-            header("Location: ./../index.php");
+            header("Location: ./../index.php#gestion-zoo");
             exit();
         }
         else{
-            header("Location: ./../index.php");
+            header("Location: ./../index.php#gestion-zoo");
             exit();
         }
     }
     else{
-        header("Location: ./../index.php");
+        header("Location: ./../index.php#gestion-zoo");
         exit();
     }
 ?>

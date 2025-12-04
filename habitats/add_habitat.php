@@ -7,13 +7,13 @@
 
         $sql = "INSERT INTO habitat (habitat_name, habitat_desc) 
                 VALUES ('$name','$desc')";
-        if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('habitat saved')</script>;";
-        }
-        else{
-            echo "<script>alert('not saved !')</script>";
-        }
+        // if (mysqli_query($conn, $sql)) {
+        //     echo "<script>alert('habitat saved')</script>;";
+        // }
+        // else{
+        //     echo "<script>alert('not saved !')</script>";
+        // }
     }
-    header('Location: ./../index.php');
+    header('Location: ./../index.php#gestion-zoo');
     exit();
 ?>
