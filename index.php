@@ -117,7 +117,7 @@
                     <?php else : ?>
                     <tr>
                         <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                            Aucun animal trouvé. <a href="add_animal.php" class="text-blue-600 underline">Ajoutez-en un</a>
+                            Aucun animal trouvé. 
                         </td>
                     </tr>
                     <?php endif;?>
@@ -200,8 +200,14 @@
                                     <td class="px-6 py-4 whitespace-nowrap"><?php echo $animal['animal_name'];?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?php echo $animal['habitat_name'];?></td>
                                     <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                        <button class="text-blue-600 hover:text-blue-900 transition"><i class="fas fa-edit"></i> Modifier</button>
-                                        <a href="./animals/delete_animal.php?id=<?=$animal['ID']?>"><button class="text-red-600 hover:text-red-900 transition"><i class="fas fa-trash"></i>Supprimer</button></a>
+                                        <button class="text-blue-600 hover:text-blue-900 transition btn-edit-animal"
+                                                data-id="<?= $animal['ID']?>"
+                                                data-name="<?=$animal['animal_name']?>"
+                                                data-type="<?=$animal['animal_type']?>"
+                                                data-img="<?=$animal['animal_img']?>"
+                                                data-habitat="<?=$animal['habitat_ID']?>"><i class="fas fa-edit"></i> Modifier</button>
+                                        <a href="./animals/delete_animal.php?id=<?=$animal['ID']?>"><button class="text-red-600 hover:text-red-900 transition "
+                                        ><i class="fas fa-trash"></i>Supprimer</button></a>
                                     </td>
                                 </tr>
                                 <?php endforeach;?>
@@ -209,7 +215,43 @@
                     </table>
                 </div>
             </div>
-            
+            <div id="edit-animal-modal" class="inset-0 z-50 fixed flex justify-center items-center bg-black/50 hidden">
+                <form id="edit-animal-form" action="./animals/edit_animal.php" class="w-2/4 space-y-4 bg-white p-6 rounded-lg shadow" method="POST">
+                    <input type="hidden" id="edit_animal_id" name="animal_id">
+                    <div>
+                        <label for="edit_animal_name">Nom de l'animal</label>
+                        <input type="text" id="edit_animal_name" name="animal_name" class="w-full border p-2 rounded-lg">
+                    </div>
+
+                    <div>
+                        <label for="edit_animal_type">Type d'animal</label>
+                        <select id="edit_animal_type" name="animal_type" class="w-full border p-2 rounded-lg">
+                            <option value="Carnivore">Carnivore</option>
+                            <option value="Herbivore">Herbivore</option>
+                            <option value="Omnivore">Omnivore</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="edit_animal_img">Image de l'animal</label>
+                        <input type="text" id="edit_animal_img" name="animal_img" class="w-full border p-2 rounded-lg">
+                    </div>
+
+                    <div>
+                        <label for="edit_habitat_ID">Habitat</label>
+                        <select id="edit_habitat_ID" name="habitat_ID" class="w-full border p-2 rounded-lg">
+                            <option value="">--select an habitat--</option>
+                            <?php foreach($habitats as $habitat) :?>
+                                <option value="<?= $habitat['habitat_ID'] ?>"><?= $habitat['habitat_name'] ?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+ 
+                    <button name="submitEdit" type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">Enregistrer</button>
+                    <button type="button" onclick="document.getElementById('edit-animal-modal').classList.add('hidden');" class="w-full mt-2 bg-gray-400 text-white py-2 rounded-lg">Annuler</button>
+                </form>
+            </div>
+
             <div id="admin-habitats" class="gestion-content bg-white p-6 rounded-lg shadow-xl hidden">
                 <h3 class="text-2xl font-bold mb-4 text-red-600">Gestion des Habitats</h3>
                 
@@ -232,7 +274,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900"><?php echo $habitat['habitat_name'];?> </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate"><?php echo $habitat['habitat_desc'];?></td>
                                     <td class="px-6 py-4 whitespace-nowrap space-x-2">
-                                        <button class="text-blue-600 hover:text-blue-900 transition btn-modifier-habitat" data-id="1"><i class="fas fa-edit"></i> Modifier</button>
+                                        <button class="text-blue-600 hover:text-blue-900 transition btn-modifier-habitat edit-habitat-btn" 
+                                                data-id="<?=$habitat['habitat_ID']?>" 
+                                                data-habitat="<?=$habitat['habitat_name']?>" 
+                                                data-description="<?=$habitat['habitat_desc']?>"><i class="fas fa-edit"></i> Modifier</button>
                                         <a href="./habitats/delete_habitat.php?id=<?=$habitat['habitat_ID']?>"><button class="text-red-600 hover:text-red-900 transition btn-supprimer-habitat" data-id="1"><i class="fas fa-trash"></i> Supprimer</button></a>
                                     </td>
                                 </tr>
@@ -298,7 +343,7 @@
                 id="habitat-form"
                 class="inset-0 bg-black/50 fixed flex justify-center items-center hidden">
                 <div id="form-habitat-modal" class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200 ">
-                    <h4 class="text-xl font-semibold mb-3">Ajouter / Modifier un Habitat</h4>
+                    <h4 class="text-xl font-semibold mb-3">Ajouter un Habitat</h4>
                     <form id="form-habitat" action="./habitats/add_habitat.php" method="POST">
                         <div class="mb-4">
                             <label for="nom_habitat" class="block text-sm font-medium text-gray-700">Nom de l'Habitat:</label>
@@ -313,6 +358,34 @@
                         </div>
                         
                         <button  name="submitHabitat" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+                            <i class="fas fa-save mr-2"></i> Enregistrer l'Habitat
+                        </button>
+                        <button id="cancel" name="cancel" type="button" class="px-4 py-2 bg-gray-400 text-white rounded-lg font-semibold hover:bg-gray-500 transition duration-200 ml-2" onclick="document.getElementById('form-habitat-modal').classList.add('hidden');">
+                            Annuler
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div
+                id="edit-habitat-form"
+                class="inset-0 bg-black/50 fixed flex justify-center items-center hidden">
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200 ">
+                    <h4 class="text-xl font-semibold mb-3">Modifier un Habitat</h4>
+                    <form action="./habitats/edit_habitat.php" method="POST">
+                        <input type="hidden" id="edit-habitat-id" name="habitat-ID">
+                        <div class="mb-4">
+                            <label for="nom-habitat" class="block text-sm font-medium text-gray-700">Nom de l'Habitat:</label>
+                            <input type="text" id="nom-habitat" name="nom-habitat" required 
+                                class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:ring-2 outline-none  shadow-sm p-2 border  duration-500">
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="description-hab" class="block text-sm font-medium text-gray-700">Description :</label>
+                            <textarea id="description-hab" name="description-hab" rows="3" required
+                                    class="mt-1 block w-full rounded-md focus:ring-blue-500 focus:ring-2 outline-none  shadow-sm p-2 border  duration-500"></textarea>
+                        </div>
+                        
+                        <button  name="submitEditHabitat" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
                             <i class="fas fa-save mr-2"></i> Enregistrer l'Habitat
                         </button>
                         <button id="cancel" name="cancel" type="button" class="px-4 py-2 bg-gray-400 text-white rounded-lg font-semibold hover:bg-gray-500 transition duration-200 ml-2" onclick="document.getElementById('form-habitat-modal').classList.add('hidden');">
