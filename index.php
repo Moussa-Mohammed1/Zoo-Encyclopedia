@@ -95,50 +95,65 @@
         
         <section id="animaux" class="py-8">
             <h2 class="text-4xl font-bold text-gray-900 mb-8 border-b-4 border-zoo-secondary pb-2"><i class="fa-solid fa-book"></i> Découvrez nos Animaux !</h2>
-
-            <div class="filtres-container bg-white p-6 rounded-lg shadow-md mb-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <input id="search-input" type="text" placeholder="Rechercher..." class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 outline-none focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
-                <select id="filtre-habitat" class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
+            <form class="filtres-container bg-white p-6 rounded-lg shadow-md mb-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" 
+                    id="filter-form"
+                    action = ""
+                    method="GET">
+                
+                <select id="filtre-habitat" name="habitat_filter" class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
+                    <?php $selected_habitat = $_GET['habitat_filter']?>
                     <option value="">Tous les Habitats</option>
-                    <option value="Savane">Savane</option>
-                    <option value="Jungle">Jungle</option>
-                    <option value="Désert">Désert</option>
-                    <option value="Océan">Océan</option>
+                    <?php foreach($habitats as $habitat) : ?>
+                    <option <?= $selected_habitat == $habitat['habitat_name'] ? 'selected' : ''?> ><?=$habitat['habitat_name']?></option>
+                    <?php endforeach?>
                 </select>
-                <select id="filtre-alimentaire" class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
-                    <option value="">Tous les Régimes</option>
-                    <option value="Carnivore">Carnivore</option>
-                    <option value="Herbivore">Herbivore</option>
-                    <option value="Omnivore">Omnivore</option>
+                <?php $selected_type = $_GET['alimentaire_filter'] ?? ''; ?>
+                <select id="filtre-alimentaire" name="alimentaire_filter" class="p-3 border border-gray-300 rounded-lg w-full sm:w-1/2 focus:ring-zoo-primary focus:border-zoo-primary transition duration-150">
+                    <option value="" <?= $selected_type == '' ? 'selected' : '' ?>>Tous les Régimes</option>
+                    <option value="Carnivore" <?= $selected_type == 'Carnivore' ? 'selected' : '' ?>>Carnivore</option>
+                    <option value="Herbivore" <?= $selected_type == 'Herbivore' ? 'selected' : '' ?>>Herbivore</option>
+                    <option value="Omnivore" <?= $selected_type == 'Omnivore' ? 'selected' : '' ?>>Omnivore</option>
                 </select>
-            </div>
 
-            <div id="liste-animaux" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <?php foreach($animals as $animal) :?>
-                    <?php if(!count($animals) == 0) :?> 
-                        <div class="carte-animal bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
-                        
-                            <img src="<?php echo htmlspecialchars($animal['animal_img']); ?>" alt="Animal Image" class="w-full bg- h-48 object-cover">
+                <button 
+                    name="submitFilter"
+                    type="submit" class="mt-4 font-semibold sm:mt-0 p-3 bg-zoo-primary text-white rounded-lg w-full sm:w-auto hover:bg-zoo-primary-dark transition duration-150">
+                    Filtrer
+                </button>
+            </form>
 
-                            <div class="p-4">
-                                <h2 class="text-xl font-semibold mb-2"><?php echo $animal['animal_name'] ;?></h2>
-                                <p class="text-gray-700"><span class="font-medium">Type:</span> <?php echo $animal['animal_type'] ;?></p>
-                                <p class="text-gray-700"><span class="font-medium">Habitat:
-                                    <?php if($animal['habitat_name']): ?>
-                                        </span> <?php echo $animal['habitat_name'];?></p>
-                                    <?php else : ?>
-                                        </span> pas d'habitat enregistré</p>
-                                    <?php endif; ?>
+            <div id="liste-animaux" class="grid grid-cols-1 overflow-auto py-10  [scrollbar-width:none] min-h-[300px] max-h-[500px]  sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <?php
+   
+                    foreach($animals as $animal){
+                        if(isset($_GET['submitFilter'])){
+                            $wanted_habitat = $_GET['habitat_filter'] ?? '';
+                            $wanted_type = $_GET['alimentaire_filter'] ?? '';
+                            if (($wanted_type == '' || $animal['animal_type'] == $wanted_type) && ($wanted_habitat == '' || $animal['habitat_name'] == $wanted_habitat)) {
+                                wanted_Animal($animal);
+                            }
+                        }
+                        else{
+                            wanted_Animal($animal);
+                        }
+                    };
+
+                    function wanted_Animal($animal) {
+                        echo '
+                            <div class="carte-animal bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
+                                <img src="' . htmlspecialchars($animal['animal_img']) . '" alt="Animal Image" class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h2 class="text-xl font-semibold mb-2">' . htmlspecialchars($animal['animal_name']) . '</h2>
+                                    <p class="text-gray-700"><span class="font-medium">Type:</span> ' . htmlspecialchars($animal['animal_type']) . '</p>
+                                    <p class="text-gray-700"><span class="font-medium">Habitat:</span> ' . 
+                                        ($animal['habitat_name'] ? htmlspecialchars($animal['habitat_name']) : 'pas d\'habitat enregistré') . 
+                                    '</p>
+                                </div>
                             </div>
-                        </div>
-                    <?php else : ?>
-                    <tr>
-                        <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                            Aucun animal trouvé. 
-                        </td>
-                    </tr>
-                    <?php endif;?>
-                <?php endforeach; ?>
+                            ';
+                    };
+
+                ?>
             </div>
         </section>
 
@@ -277,9 +292,9 @@
                     <i class="fas fa-plus mr-2"></i> Ajouter un Nouvel Animal
                 </button>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-auto  min-h-[100px] max-h-[200px] [scrollbar-width:none]">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gray-50 sticky top-0">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Habitat</th>
@@ -351,9 +366,9 @@
                     <i class="fas fa-plus mr-2"></i> Ajouter un Nouvel Habitat
                 </button>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-auto  min-h-[100px] max-h-[300px] [scrollbar-width:none]">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gray-50 sticky top-0 ">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom de l'Habitat</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
@@ -496,8 +511,8 @@
     <footer class="bg-gray-800 text-white p-6 text-center">
         <p class="text-sm">&copy; 2024 Mon Zoo Éducatif - Accessibilité et Ergonomie assurées.</p>
     </footer>
-
-    <script src="./js/script.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 </html>
