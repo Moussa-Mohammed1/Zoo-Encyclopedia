@@ -1,7 +1,7 @@
 <?php
     $translate = [
         'Zoo Encyclopedie' => 'Zoo Encyclopedia',
-        'Zoo-Crèche' => 'Zoo-Nursery',
+        'Zoo-Crèche' => 'Zoo Encyclopedia',
         'Accueil' => 'Home',
         'Animaux' => 'Animals',
         'Gestion' => 'Management',
@@ -46,6 +46,7 @@
         'Modifier' => 'Edit',
         'Supprimer' => 'Delete',
         "Nom de l'animal" => 'Animal Name',
+        "--choisir un habitat--" =>"--Select an habitat--",
         "Type d'animal" => 'Animal Type',
         "Image de l'animal" => 'Animal Image',
         'Enregistrer' => 'Save',
