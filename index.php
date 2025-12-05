@@ -51,6 +51,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$translate['Zoo Encyclopedie']?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/7.5.0/css/flag-icons.min.css" integrity="sha512-+WVTaUIzUw5LFzqIqXOT3JVAc5SrMuvHm230I9QAZa6s+QRk8NDPswbHo2miIZj3yiFyV9lAgzO1wVrjdoO4tw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
@@ -80,17 +81,17 @@
             <a href="#animaux" class="text-gray-600 hover:text-zoo-primary transition duration-300 flex items-center"><i class="fas fa-paw mr-2"></i> <?=$translate['Animaux']?></a>
             <a href="#gestion-zoo" class="text-gray-600 hover:text-zoo-primary transition duration-300 flex items-center"><i class="fas fa-cogs mr-2"></i> <?=$translate['Gestion']?></a>
             <a href="#statistiques" class="text-gray-600 hover:text-zoo-primary transition duration-300 flex items-center"><i class="fas fa-chart-bar mr-2"></i> <?=$translate['Stats']?></a>
-            <a href="#jeu-edu" class="text-gray-600 hover:text-zoo-primary transition duration-300 flex items-center"><i class="fas fa-gamepad mr-2"></i><?=$translate['Jeu']?></a>
+            <!-- <a href="#jeu-edu" class="text-gray-600 hover:text-zoo-primary transition duration-300 flex items-center"><i class="fas fa-gamepad mr-2"></i></a> -->
         </nav>
         <div class="flex space-x-2">
-            <button id="switch-fr" class="px-3 py-1 text-sm font-semibold rounded-lg bg-zoo-secondary text-gray-900 shadow"><a href="?lang=fr">FR</a></button>
-            <button id="switch-en" class="px-3 py-1 text-sm font-semibold rounded-lg bg-gray-200 hover:bg-gray-300 transition"><a href="?lang=en">EN</a></button>
+            <a href="?lang=fr"><button id="switch-fr" class="<?=$lang === 'fr' ? 'bg-zoo-secondary': 'bg-gray-200 hover:bg-gray-300'?> px-3 py-1 text-sm font-semibold rounded-lg  text-gray-900 shadow"><span class="fi fi-fr"></span> FR</button></a>
+            <a href="?lang=en"><button id="switch-en" class="<?=$lang === 'en' ? 'bg-zoo-secondary': 'bg-gray-200 hover:bg-gray-300'?> px-3 py-1 text-sm font-semibold rounded-lg  transition"><span class="fi fi-gb"></span> EN</button></a>
         </div>
     </header>
 
     <main id="content" class="container mx-auto p-4 md:p-8">
         
-        <section id="accueil" class="zoo-background py-16 bg-white rounded-xl shadow-lg mb-10 text-center">
+        <section id="accueil" class=" py-16 bg-white rounded-xl shadow-lg mb-10 text-center">
             <h2 class="text-4xl font-bold text-zoo-primary mb-4"><?=$translate["Bienvenue à l'Explorateur du Zoo !"]?></h2>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto"><?=$translate["Un jeu amusant pour les petits élèves de la crèche pour apprendre sur les animaux, leurs habitats et leurs régimes alimentaires."]?></p>
         </section>
@@ -503,10 +504,10 @@
                     </form>
                 </div>
             </div>
-        <section id="jeu-edu" class="py-8 bg-zoo-secondary/20 p-6 rounded-xl shadow-lg border-l-8 border-zoo-secondary">
-            <h2 class="text-4xl font-bold text-gray-900 mb-4"><i class="fa-solid fa-gamepad"></i> <?=$translate['Jeu Éducatif : Sons et Images !']?></h2>
-            <p class="text-lg text-gray-700"><?=$translate["Un espace interactif pour tester les connaissances des enfants (à développer avec JavaScript pour les sons et le scoring)."]?></p>
-        </section>
+        <!-- <section id="jeu-edu" class="py-8 bg-zoo-secondary/20 p-6 rounded-xl shadow-lg border-l-8 border-zoo-secondary">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4"><i class="fa-solid fa-gamepad"></i></h2>
+            <p class="text-lg text-gray-700"></p>
+        </section> -->
 
     </main>
 
